@@ -1,0 +1,23 @@
+# Python local preview server
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Local configuration and generated files
+.env
+.env.*
+!.env.example
+*.log
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Database files belong to the backend runtime, not this repository
+*.sqlite
+*.sqlite-*
+*.sqlite3
+*.sqlite3-*
+*.db
+*.db-*

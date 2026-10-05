@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CalcFlow · 前后端分离计算器</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">SEPARATED CALCULATOR</p>
+          <h1>Calc<span>Flow</span></h1>
+          <p class="subtitle">让后端完成每一次计算，让结果值得信赖。</p>
+        </div>
+        <button id="themeToggle" class="icon-button" type="button" aria-label="切换主题">☼</button>
+      </header>
+
+      <section class="grid">
+        <article class="calculator card">
+          <div class="status-row">
+            <span class="status-dot"></span>
+            <span id="connectionStatus">正在连接后端…</span>
+            <span class="api-label">API · <code>POST /api/calculate</code></span>
+          </div>
+          <div class="display-wrap">
+            <label for="expression">表达式</label>
+            <input id="expression" autocomplete="off" spellcheck="false" placeholder="例如： (1 + 2) * 3" />
+            <div id="result" class="result" aria-live="polite">等待计算</div>
+          </div>
+          <div class="keypad" aria-label="计算器按键">
+            <button class="key utility" data-action="clear">AC</button>
+            <button class="key utility" data-action="backspace">⌫</button>
+            <button class="key operator" data-value="(">(</button>
+            <button class="key operator" data-value=")">)</button>
+            <button class="key" data-value="7">7</button>
+            <button class="key" data-value="8">8</button>
+            <button class="key" data-value="9">9</button>
+            <button class="key operator" data-value="/">÷</button>
+            <button class="key" data-value="4">4</button>
+            <button class="key" data-value="5">5</button>
+            <button class="key" data-value="6">6</button>
+            <button class="key operator" data-value="*">×</button>
+            <button class="key" data-value="1">1</button>
+            <button class="key" data-value="2">2</button>
+            <button class="key" data-value="3">3</button>
+            <button class="key operator" data-value="-">−</button>
+            <button class="key" data-value="0">0</button>
+            <button class="key" data-value=".">.</button>
+            <button class="key operator" data-value="+">+</button>
+            <button class="key equals" data-action="calculate">=</button>
+          </div>
+          <p class="hint">Enter 计算 · Esc 清空 · 支持小数、括号和一元正负号</p>
+          <p id="error" class="error" role="alert"></p>
+        </article>
+
+        <aside class="history card">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">PERSISTED RECORDS</p>
+              <h2>计算历史</h2>
+            </div>
+            <button id="clearHistory" class="text-button" type="button">清空</button>
+          </div>
+          <label class="search"><span>⌕</span><input id="historySearch" placeholder="搜索表达式" /></label>
+          <div id="historyList" class="history-list"><div class="empty">正在从数据库读取…</div></div>
+        </aside>
+      </section>
+
+      <footer><span>Frontend ↔ HTTP/JSON ↔ Backend ↔ SQLite</span><span>Assignment 01 · 2026</span></footer>
+    </main>
+    <script src="app.js"></script>
+  </body>
+</html>
