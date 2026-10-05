@@ -1,4 +1,5 @@
-const API_BASE = window.CALCULATOR_API_BASE || 'http://127.0.0.1:8000/api';
+const IS_LOCAL = ['localhost', '127.0.0.1', '[::1]'].includes(window.location.hostname);
+const API_BASE = window.CALCULATOR_API_BASE || (IS_LOCAL ? 'http://127.0.0.1:8000/api' : '');
 const expressionInput = document.querySelector('#expression');
 const resultOutput = document.querySelector('#result');
 const errorOutput = document.querySelector('#error');
@@ -20,6 +21,7 @@ function renderHistory() {
 function escapeHtml(value) { return value.replace(/[&<>'"]/g, character => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#39;', '"':'&quot;' }[character])); }
 function formatTime(value) { const date = new Date(value); return Number.isNaN(date.getTime()) ? value : date.toLocaleString('zh-CN', { month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit' }); }
 async function request(path, options = {}) {
+  if (!API_BASE) throw new Error('线上服务正在配置，请稍后再试');
   const response = await fetch(`${API_BASE}${path}`, { headers: { 'Content-Type': 'application/json' }, ...options });
   const data = await response.json().catch(() => ({ success:false, message:'后端返回了无效响应' }));
   if (!response.ok || data.success === false) throw new Error(data.message || `请求失败 (${response.status})`);
@@ -38,7 +40,7 @@ async function calculate() {
     resultOutput.textContent = '计算失败';
     resultOutput.classList.add('pending');
     setError(error.message);
-    setConnection(!(error instanceof TypeError));
+    setConnection(Boolean(API_BASE) && !(error instanceof TypeError));
   }
 }
 async function deleteHistory(id) { try { await request(`/history/${id}`, { method:'DELETE' }); await loadHistory(); } catch (error) { setError(error.message); } }
@@ -52,4 +54,9 @@ expressionInput.addEventListener('keydown', event => { if (event.key === 'Enter'
 historySearch.addEventListener('input', renderHistory);
 document.querySelector('#clearHistory').addEventListener('click', async () => { if (!history.length) return; try { await request('/history', { method:'DELETE' }); await loadHistory(); } catch (error) { setError(error.message); } });
 document.querySelector('#themeToggle').addEventListener('click', () => document.body.classList.toggle('dark'));
-loadHistory();
+if (API_BASE) {
+  loadHistory();
+} else {
+  connectionStatus.textContent = '线上服务正在配置';
+  historyList.innerHTML = '<div class="empty">后端部署完成后即可使用计算和历史记录</div>';
+}

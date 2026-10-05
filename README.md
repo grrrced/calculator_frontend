@@ -20,21 +20,18 @@ python3 server.py
 
 ## 配置后端地址
 
-默认 API 地址是 `http://127.0.0.1:8000/api`，适用于前后端均运行在当前电脑的情况。换用另一台设备、局域网服务器或线上后端时，在 `index.html` 底部、加载 `app.js` 之前加入配置：
+本地打开页面时，默认 API 地址是 `http://127.0.0.1:8000/api`。换用另一台设备、局域网服务器或线上后端时，编辑 `config.js`：
 
-```html
-<script>
-  window.CALCULATOR_API_BASE = 'http://127.0.0.1:8000/api';
-</script>
-<script src="app.js"></script>
+```javascript
+window.CALCULATOR_API_BASE = 'http://127.0.0.1:8000/api';
 ```
 
-把示例中的本机地址替换为**浏览器能够访问的实际后端地址**，保留 `/api`，末尾不加 `/`。上面的 `app.js` 标签应替换原有标签，避免重复加载。
+把示例中的本机地址替换为**浏览器能够访问的实际后端地址**，保留 `/api`，末尾不加 `/`。`index.html` 会在 `app.js` 之前加载 `config.js`。线上未配置时页面会提示服务正在配置，不会请求访问者电脑上的后端。
 
 - 局域网访问时，使用后端电脑的局域网 IP 和端口。`127.0.0.1` 始终指向打开浏览器的设备。
 - 线上 HTTPS 前端应连接 HTTPS 后端，避免浏览器拦截混合内容请求。
 - 当前后端已支持跨来源请求（CORS），前后端可以使用不同主机或端口。
-- 静态托管可直接发布 `index.html`、`styles.css` 和 `app.js`；不需要在线运行本仓库的 Python 服务。后端仍需单独部署。
+- 静态托管可直接发布 `index.html`、`styles.css`、`config.js` 和 `app.js`；不需要在线运行本仓库的 Python 服务。后端仍需单独部署。
 
 若需让同一局域网的设备打开前端，在 macOS/Linux 运行：
 
@@ -64,6 +61,7 @@ FRONTEND_HOST=0.0.0.0 FRONTEND_PORT=5500 python3 server.py
 ├── index.html        # 页面结构
 ├── styles.css        # 响应式界面样式
 ├── app.js            # HTTP 请求、交互和视图状态
+├── config.js         # 后端 API 地址配置
 └── server.py         # 本地静态文件服务器
 ```
 
